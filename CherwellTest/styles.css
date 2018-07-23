@@ -1,0 +1,29 @@
+﻿header img {
+    margin-bottom: 50px;
+    height: 50px;
+    width: 200px;
+}
+
+.container {
+    float: left;
+    margin-right: 200px;
+    width: 350px;
+    height: 350px;
+}
+
+.container img {
+    width: 100%;
+    height: auto;
+}
+
+#triangleImage {
+   width: 450px;
+   height: 150px;
+}
+
+.search_container {
+    display: inline-block;
+    width: 500px;
+    height: auto
+}
+

@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Cherwell Test</title>
+    <link rel="stylesheet" type="text/css" href="styles.css"> 
+</head>
+<body>
+    <header>
+        <img id="cherwell_logo" src="Resources/Images/cherwell_logo.jpg" />
+    </header>
+    
+    <div class="container">
+        <img id="triangleGrid" src="Resources/Images/TriangleGrid.png" />
+        <img id="triangleImage" src="Resources/Images/Triangle.png" />
+    </div>
+    
+    <div class="search_container">
+        <h2>Find Triangle Coordinates</h2>
+        <h4>Enter Triangle Row & Column to search for coordinates</h4>
+        <text>Row (A-F): <input type="text" id="row" size="1" pattern="[A-Za-z]{1}" /></text>
+        <text>Column (1-12): <input type="number" id="column" min="1" max="12"/></text>
+        <input type="button" value="Search" onclick="findByRowColumn();" />
+
+        <h2>Find Triangle Row & Column</h2>
+        <h4>Enter Triangle Coordinates to search for triangle grid position</h4>
+        <text>V1x: </text><input type="number" id="v1x" min="0" max="60"/>
+        <text>V1y: </text><input type="number" id="v1y" min="0" max="60" /><br />
+        <text>V2x: </text><input type="number" id="v2x" min="0" max="60" />
+        <text>V2y: </text><input type="number" id="v2y" min="0" max="60" /><br />
+        <text>V3x: </text><input type="number" id="v3x" min="0" max="60" />
+        <text>V3y: </text><input type="number" id="v3y" min="0" max="60"" />
+        <input type="button" value="Search" onclick="findByCoordinates();" />
+
+        <h3>Search Result: </h3>
+        <p id="triangleInfo" />
+    </div>
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+        var uri = 'api/imageGrid';
+   
+        function findByRowColumn() {
+            var row = $('#row').val();
+            var column = $('#column').val();
+            $.getJSON(uri + '/GetTriangleCoordinates/' + row + '/' + column)
+                .done(function (data) {
+                    $('#triangleInfo').text(formatTriangleCoordinates(data));
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    $('#triangleInfo').text('Error: Invalid Input');
+                });
+        }
+
+        function findByCoordinates() {
+            var v1x = $('#v1x').val();
+            var v1y = $('#v1y').val();
+            var v2x = $('#v2x').val();
+            var v2y = $('#v2y').val();
+            var v3x = $('#v3x').val();
+            var v3y = $('#v3y').val();
+
+            $.getJSON(uri + '/GetTriangleRowColumn/' + v1x + '/' + v1y + '/' + v2x + '/' + v2y + '/' + v3x + '/' + v3y)
+                .done(function (data) {
+                    $('#triangleInfo').text(formatTriangleRowColumn(data));
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    $('#triangleInfo').text('Error: Invalid Input');
+                });
+        }
+
+        function formatTriangleRowColumn(triangle) {
+            return "Grid Position: " + triangle.Row + triangle.Column;
+        }
+
+        function formatTriangleCoordinates(triangle) {
+            var coordinates = row = $('#row').val().toUpperCase() + $('#column').val() +
+                ' Coordinates: V1(' + triangle.Vertex1x + ',' + triangle.Vertex1y + ') V2(' +
+                triangle.Vertex2x + ',' + triangle.Vertex2y + ') V3(' + triangle.Vertex3x + ',' + triangle.Vertex3y + ')';
+            return coordinates;
+        }
+    </script>
+
+</body>
+</html >
